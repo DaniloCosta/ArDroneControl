@@ -1,0 +1,26 @@
+<launch>
+
+<node name="tum_interface" pkg="ArDroneControl" type="tum_interface" output="screen" clear_params="false">
+</node> 
+
+
+<node name="planner" pkg="ArDroneControl" type="planner" output="screen" clear_params="false">
+</node> 
+
+
+<node name="position_control" pkg="ArDroneControl" type="position_control" output="screen" clear_params="false">
+</node> 
+
+
+<node name="rviz" pkg="rviz" type="rviz">
+</node>
+
+<node name="rqt_plot" pkg="rqt_plot" type="rqt_plot" output="screen" clear_params="false">
+</node> 
+
+
+<node name="record" pkg="rosbag" type="record" args="-O /home/danilo/bagfiles/ArDroneControl /tf /ardrone/navdata /cmd_vel /ardrone/imu /poseSetPoint /poseRateSetPoint /ardrone/predictedPose /erro"/>
+
+
+
+</launch>

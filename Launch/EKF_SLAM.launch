@@ -1,0 +1,107 @@
+<launch>
+	<!-- use launch arguments to pass parameter values to multiple nodes -->
+	<arg name="euler_angle_max" default="0.05" /> <!-- 0.1 a 0.2 -->
+	<arg name="control_vz_max" default="700" /> <!-- 700 -->
+	<arg name="control_yaw" default="1.75" /> <!-- 1.75 -->
+	
+	
+	<node name="ardrone_driver" pkg="ardrone_autonomy" type="ardrone_driver" output="screen" clear_params="true">
+	    <param name="outdoor" value="1" />
+	    <param name="max_bitrate" value="4000" />
+	    <param name="bitrate" value="4000" />
+	    <param name="navdata_demo" value="0" /> <!-- comunicate with drone at 200Hz -->
+	    <param name="realtime_navdata" value="true" /> <!-- publish at 200Hz real time -->
+	    <param name="looprate" value="30" /> <!-- publish at desired loop rate (set realtim_navdata to false) --> 
+	    <param name="video_channel" value="1" /> <!-- for ardrone 2.0 set 1 to use bottom camera, set 0 to use front camera --> 
+	    <param name="flight_without_shell" value="0" />
+	    <param name="altitude_max" value="3000" />
+        <param name="altitude_min" value="50" />
+			<param name="euler_angle_max" value="$(arg euler_angle_max)" /> 
+			<param name="control_vz_max" value="$(arg control_vz_max)" /> 
+			<param name="control_yaw" value="$(arg control_yaw)" /> 
+	    <param name="do_imu_caliberation" value="true" />
+	    <param name="tf_prefix" value="mydrone" />
+
+<!--	    <param name="camera_info_url" type="string"
+	      value="file://$(find ardrone_autonomy)/data/camera_info/ardrone_bottom.yaml" />       -->
+
+        <!-- Covariance Values (3x3 matrices reshaped to 1x9)-->
+        <rosparam param="cov/imu_la">[0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.1]</rosparam>
+        <rosparam param="cov/imu_av">[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]</rosparam>
+        <rosparam param="cov/imu_or">[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 100000.0]</rosparam>
+
+ 	<remap from="/ardrone/image_raw" to="/camera/image_raw"/>	
+ 	<remap from="/ardrone/camera_info" to="/camera/camera_info"/> 
+	
+	</node>
+
+
+	<node ns="/camera" pkg="image_proc" type="image_proc" name="image_proc"/>
+
+
+	<node pkg="rviz" type="rviz" name="rviz"
+	    args="-d $(find ArDroneControl)/RVizConfig_Demo.rviz"/>
+	<!-- 
+	rviz will not display camera images if fixed frame do not exist 
+	-->
+
+
+
+	<node name="ar_pose" pkg="ar_pose" type="ar_multi" respawn="false"  output="screen">
+	    <param name="marker_pattern_list" type="string" value="$(find ArDroneControl)/Data/pattern_list_live"/>
+	    <param name="threshold" type="int" value="160"/>
+	</node>
+
+
+	
+	<node pkg="tf" type="static_transform_publisher"	name="baselink_to_frontcam" 
+	    args="0 0 0 1.5708 3.1415 0  ardrone_base_link ardrone_base_frontcam 100" />
+
+	<node pkg="tf" type="static_transform_publisher"	name="baselink_to_bottomcam" 
+	    args="0 0 0 1.5708 3.1415 0 ardrone_base_link ardrone_base_bottomcam 100" /> 
+
+
+
+	<node name="slam" pkg="ArDroneControl" type="slam" output="screen">
+		<param name="covarobsscalar" type="double" value="0.3"/>
+		<param name="newmarkcovarobsscalar" type="double" value="0.9"/>
+		<param name="covarodoscalar" type="double" value="100.0"/>
+		<param name="publishmap" type="bool" value="1"/>
+		<param name="publishvelocitymarker" type="bool" value="1"/>
+		<param name="covarobsproportional" type="bool" value="0"/>
+		<param name="covarinit" type="double" value="1000000.0"/>
+	    <param name="map_file_path" type="string" value="$(find ArDroneControl)/Data/savedmap"/>
+	</node>
+
+
+	<node name="keyinput" pkg="ArDroneControl" type="keyinput" output="screen" />
+
+
+	<node name="planner" pkg="ArDroneControl" type="planner" output="screen">
+		<param name="path_file_path" type="string" value="$(find ArDroneControl)/Data/pathdemo"/>
+	</node>
+	
+	
+	<node name="position_control" pkg="ArDroneControl" type="position_control" output="screen">
+		<param name="euler_angle_max" type="double" value="$(arg euler_angle_max)" /> 
+		<param name="control_vz_max" value="$(arg control_vz_max)" /> 
+		<param name="control_yawrate_max" value="$(arg control_yaw)" /> 
+		<param name="usehover" type="bool" value="0"/> 		<!-- if usehover =1 uses the ardrone hover stabilization when near=1 -->
+		<param name="near_upper_threshold" value="0.6" /> 	<!-- threshold to trigger hover stabilization, if usehover=1 -->
+		<param name="near_lower_threshold" value="0.3" /> 	<!-- threshold to trigger hover stabilization, if usehover=1 --> 
+		<param name="kpyaw" value="1.5" /> 
+		<param name="kdyaw" value="0.5" />  
+		<param name="kpaltd" value="0.45" /> 
+		<param name="K1" value="0.07" /> 
+		<param name="K2" value="1.1" />
+	</node>
+
+
+	<node name="drone_gui" pkg="tum_ardrone" type="drone_gui" output="screen" clear_params="false">
+	</node> 
+	
+
+	<node name="record" pkg="rosbag" type="record" args="-O /home/danilo/bagfiles/ArDroneControl /ardrone/navdata /cmd_vel /ardrone/imu /camera/image_raw /camera/camera_info"/>
+
+
+</launch>

@@ -1,0 +1,18 @@
+<package>
+  <description brief="ArDroneControl">
+
+     ArDroneControl
+
+  </description>
+  <author>Danilo</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ArDroneControl</url>
+  <depend package="ardrone_autonomy"/>
+  <depend package="nav_msgs"/>
+  <depend package="tf"/>
+  <depend package="tum_ardrone"/>
+  <rosdep name="eigen" />
+</package>
+
+

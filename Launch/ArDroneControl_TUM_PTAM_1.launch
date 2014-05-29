@@ -1,0 +1,28 @@
+<launch>
+  <arg name="droneip" default="192.168.1.1" />
+  <node name="ardrone_driver" pkg="ardrone_autonomy" type="ardrone_driver" output="screen" args="-ip $(arg droneip)">
+    <param name="outdoor" value="1" />
+    <param name="navdata_demo" value="False" />
+    <param name="realtime_navdata" value="True" />
+    <param name="realtime_video" value="True" />
+    <param name="looprate" value="30" />
+    <param name="flight_without_shell" value="0" />
+    <param name="altitude_max" value="3000" />
+    <param name="altitude_min" value="50" />
+    <param name="euler_angle_max" value="0.21" /> <!-- antes 0.21 -->
+    <param name="control_vz_max" value="700" /> <!-- antes 700 -->
+    <param name="control_yaw" value="1.75" /> <!-- antes 1.75 -->
+
+  </node>
+
+
+<node name="drone_stateestimation" pkg="tum_ardrone" type="drone_stateestimation">
+</node>
+
+
+<node name="drone_gui" pkg="tum_ardrone" type="drone_gui">
+</node>
+
+
+
+</launch>
