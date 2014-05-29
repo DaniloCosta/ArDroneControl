@@ -5,6 +5,7 @@ ArDroneControl is a ROS package for state estimation and pose control of a Parro
 "ArDroneControl" is a [ROS](http://ros.org/ "Robot Operating System") package for state estimate and control of a [Parrot AR-Drone](http://ardrone2.parrot.com/) quadrocopter. This package is to be used with [ardrone_autonomy](https://github.com/AutonomyLab/ardrone_autonomy/ "AutonomyLab ardrone_autonomy"), [artoolkit](wiki.ros.org/artoolkit), and [tum_ardrone](wiki.ros.org/tum_ardrone). 
 
 this package has the following nodes to be used:
+
 localization/slam : this node uses the ardrone bottom camera images to make a map of artookit markers and localize the drone pose using a Kalman Filter.
 
 position_control: this node implements a PD controler to control the drone's pose (position and yaw angle). the pose feedback can be made using the slam/localization nodes or tum_ardrone's PTAM SLAM.
