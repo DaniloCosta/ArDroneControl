@@ -1,7 +1,7 @@
 <launch>
 
 	<node name="play" pkg="rosbag" type="play" 
-	args="$(find ArDroneControl)/Data/ArDroneControlDemo.bag  -d 5 --clock"/>
+	args="$(find ArDroneControl)/Data/ArDroneControlDemo.bag  -d 15 --clock"/>
 	
 
 
@@ -56,7 +56,7 @@
 -->
 
 
-	<node name="record" pkg="rosbag" type="record" args="-O /home/danilo/bagfiles/ArDroneControl /Pose "/>
+	<node name="record" pkg="rosbag" type="record" args="-O $(find ArDroneControl)/Data/bagfiles/ArDroneControl /Pose "/>
 
 
 

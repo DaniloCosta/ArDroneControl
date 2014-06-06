@@ -101,7 +101,7 @@
 	</node> 
 	
 
-	<node name="record" pkg="rosbag" type="record" args="-O /home/danilo/bagfiles/ArDroneControl /ardrone/navdata /cmd_vel /ardrone/imu /camera/image_raw /camera/camera_info"/>
+	<node name="record" pkg="rosbag" type="record" args="-O $(find ArDroneControl)/Data/bagfiles/ArDroneControl /ardrone/navdata /cmd_vel /ardrone/imu /camera/image_raw /camera/camera_info"/>
 
 
 </launch>

@@ -19,7 +19,7 @@
 </node> 
 
 
-<node name="record" pkg="rosbag" type="record" args="-O /home/danilo/bagfiles/ArDroneControl /tf /ardrone/navdata /cmd_vel /ardrone/imu /poseSetPoint /poseRateSetPoint /ardrone/predictedPose /erro"/>
+<node name="record" pkg="rosbag" type="record" args="-O $(find ArDroneControl)/Data/bagfiles/ArDroneControl /tf /ardrone/navdata /cmd_vel /ardrone/imu /poseSetPoint /poseRateSetPoint /ardrone/predictedPose /erro"/>
 
 
 
