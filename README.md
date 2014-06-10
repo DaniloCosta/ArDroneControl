@@ -33,4 +33,5 @@ keyinput: this node passes keyboard inputs to the other nodes. select the termin
 
 PS.: this package currently uses tum_ardrone's GUI to control drone in manual mode. Even when the source of control is set to "none" in drone_gui it keeps sending control signals. So to use the position_control node you have to close drone_gui.
 
-download bag file with demo data at https://github.com/DaniloCosta/ArDroneControlDemoData
+download bag file with demo data at http://www.4shared.com/file/ApJkegLyba/ArDroneControlDemo.html
+
